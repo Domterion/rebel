@@ -47,8 +47,6 @@ func (client *Client) Open() error {
 		return errors.New(message)
 	}
 
-	// Once we confirm we are authenticated we will start heartbeating and can start our event handling
-
 	go client.ping()
 
 	for {
