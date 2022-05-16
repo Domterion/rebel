@@ -80,20 +80,38 @@ func (client *Client) ping() {
 
 func (client *Client) handleEvent(messageType int, bytes []byte) {
 	var message ApiResponse
+
 	json.Unmarshal(bytes, &message)
 
 	fmt.Printf("handling event type=%s\n", message.Type)
 
 	switch message.Type {
 	case "Ready":
+		if client.onReadyFunction == nil {
+			return
+		}
+
 		var ready Ready
 		json.Unmarshal(bytes, &ready)
 
 		client.onReadyFunction(client, &ready)
 	case "Message":
+		if client.onMessageFunction == nil {
+			return
+		}
+
 		var message Message
 		json.Unmarshal(bytes, &message)
 
 		client.onMessageFunction(client, &message)
+	case "MessageUpdate":
+		if client.onMessageUpdateFunction == nil {
+			return
+		}
+
+		var message MessageUpdate
+		json.Unmarshal(bytes, &message)
+
+		client.onMessageUpdateFunction(client, &message)
 	}
 }

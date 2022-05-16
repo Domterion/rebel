@@ -12,8 +12,9 @@ Library structs
 type Client struct {
 	Token string
 
-	onReadyFunction   func(*Client, *Ready)
-	onMessageFunction func(*Client, *Message)
+	onReadyFunction         func(*Client, *Ready)
+	onMessageFunction       func(*Client, *Message)
+	onMessageUpdateFunction func(*Client, *MessageUpdate)
 
 	websocket *websocket.Conn
 }
@@ -37,8 +38,6 @@ type Ping struct {
 }
 
 type Ready struct {
-	ApiResponse
-
 	Users    []User    `json:"users"`
 	Servers  []Server  `json:"servers"`
 	Channels []Channel `json:"channels"`
@@ -164,4 +163,10 @@ type UserRelationship struct {
 
 type UserBot struct {
 	Owner string `json:"owner"`
+}
+
+type MessageUpdate struct {
+	Id      string  `json:"id"`
+	Channel string  `json:"channel"`
+	Data    Message `json:"data"`
 }
