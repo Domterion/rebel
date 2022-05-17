@@ -97,9 +97,6 @@ func (client *Client) handleEvent(messageType int, bytes []byte) {
 		json.Unmarshal(bytes, &ready)
 
 		client.onReadyFunction(client, &ready)
-
-		// bytes, _ := client.Request("GET", "/users/@me", []byte{})
-		// println(string(bytes))
 	case "Message":
 		if client.onMessageFunction == nil {
 			return
