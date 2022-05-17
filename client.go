@@ -1,9 +1,11 @@
 package rebel
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"time"
 
@@ -11,10 +13,12 @@ import (
 )
 
 const PING_INTERVAL = 15
+const API_URL = "https://api.revolt.chat/"
 
 func New(token string) *Client {
 	client := &Client{
 		Token: token,
+		http:  &http.Client{},
 	}
 
 	return client
@@ -93,6 +97,9 @@ func (client *Client) handleEvent(messageType int, bytes []byte) {
 		json.Unmarshal(bytes, &ready)
 
 		client.onReadyFunction(client, &ready)
+
+		// bytes, _ := client.Request("GET", "/users/@me", []byte{})
+		// println(string(bytes))
 	case "Message":
 		if client.onMessageFunction == nil {
 			return
@@ -112,4 +119,27 @@ func (client *Client) handleEvent(messageType int, bytes []byte) {
 
 		client.onMessageUpdateFunction(client, &message)
 	}
+}
+
+func (client *Client) Request(method string, route string, data []byte) ([]byte, error) {
+	route = fmt.Sprintf("%s%s", API_URL, route)
+	reader := bytes.NewReader(data)
+
+	req, err := http.NewRequest(method, route, reader)
+	if err != nil {
+		return []byte{}, err
+	}
+	req.Header.Add("x-bot-token", client.Token)
+
+	resp, err := client.http.Do(req)
+	if err != nil {
+		return []byte{}, err
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return []byte{}, err
+	}
+
+	return body, nil
 }

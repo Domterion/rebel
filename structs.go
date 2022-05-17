@@ -1,6 +1,8 @@
 package rebel
 
 import (
+	"net/http"
+
 	"github.com/gorilla/websocket"
 	"github.com/relvacode/iso8601"
 )
@@ -17,6 +19,7 @@ type Client struct {
 	onMessageUpdateFunction func(*Client, *MessageUpdate)
 
 	websocket *websocket.Conn
+	http      *http.Client
 }
 
 type Context struct {
