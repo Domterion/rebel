@@ -104,13 +104,46 @@ type Server struct {
 }
 
 type Message struct {
-	ID          string        `json:"_id"`
+	Id          string        `json:"_id"`
 	Nonce       string        `json:"nonce"`
 	Channel     string        `json:"channel"`
 	Author      string        `json:"author"`
 	Content     string        `json:"content"`
 	Attachments []File        `json:"attachments"`
 	Edited      *iso8601.Time `json:"edited"`
+}
+
+type Embed struct {
+	Type        string       `json:"type"`
+	Url         string       `json:"url"`
+	OriginalUrl string       `json:"original_url"`
+	Special     EmbedSpecial `json:"special"`
+	Title       string       `json:"title"`
+	Description string       `json:"description"`
+	Image       EmbedImage   `json:"image"`
+	Video       EmbedVideo   `json:"video"`
+	SiteName    string       `json:"site_name"`
+	IconUrl     string       `json:"icon_url"`
+	Colour      string       `json:"colour"`
+}
+
+type EmbedSpecial struct {
+	Id          string `json:"_id"`
+	Type        string `json:"type"`
+	ContentType string `json:"content_type"`
+}
+
+type EmbedVideo struct {
+	Url    string `json:"url"`
+	Width  int    `json:"width"`
+	Height int    `json:"height"`
+}
+
+type EmbedImage struct {
+	Url       string `json:"url"`
+	Width     int    `json:"width"`
+	Height    int    `json:"height"`
+	ImageSize string `json:"image_size"`
 }
 
 type SystemMessages struct {

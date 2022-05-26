@@ -63,6 +63,10 @@ func (client *Client) Open() error {
 	return nil
 }
 
+func (client *Client) Close() {
+	client.websocket.Close()
+}
+
 func (client *Client) ping() {
 	for {
 		time.Sleep(PING_INTERVAL * time.Second)
